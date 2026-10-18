@@ -146,5 +146,51 @@ describe("Mars Mission application", () => {
 
     cy.get('[data-testid="task-count"]').should("have.text", "1");
   });
+ 
+  it("TC-006: updates the task count when tasks are created and deleted", () => {
+    // Starts at zero
+    cy.get('[data-testid="task-count"]').should("have.text", "0");
+
+    // Create the first task
+    cy.get('[data-testid="title-input"]').type("Test oxygen system");
+    cy.get('[data-testid="submit-task"]').click();
+
+    cy.get('[data-testid="task-count"]').should("have.text", "1");
+
+    // Create the second task
+    cy.get('[data-testid="title-input"]').type("Inspect rover");
+    cy.get('[data-testid="submit-task"]').click();
+
+    cy.get('[data-testid="task-count"]').should("have.text", "2");
+
+    // Delete one task
+    cy.get('[data-testid="task-item"]')
+      .contains(".task__title", "Test oxygen system")
+      .parents('[data-testid="task-item"]')
+      .find('[data-testid="delete-task"]')
+      .click();
+
+    cy.get('[data-testid="task-count"]').should("have.text", "1");
+  });
+
+  //Verify tasks persist after refreshing
+  it("TC-007: keeps saved tasks after refreshing the page", () => {
+    cy.get('[data-testid="title-input"]').type("Prepare the Mars rover");
+    cy.get('[data-testid="desc-input"]').type("Check wheels and navigation");
+    cy.get('[data-testid="assignee-input"]').type("Alex");
+    cy.get('[data-testid="submit-task"]').click();
+
+    cy.get('[data-testid="task-item"]').should("have.length", 1);
+
+    cy.reload();
+
+    cy.get('[data-testid="task-item"]').should("have.length", 1).within(() => {
+      cy.get(".task__title").should("have.text", "Prepare the Mars rover");
+      cy.get(".task__desc").should("contain.text", "Check wheels and navigation");
+      cy.contains("Assigned to Alex").should("be.visible");
+    });
+
+    cy.get('[data-testid="task-count"]').should("have.text", "1");
+  });
 
 });
