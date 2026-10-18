@@ -1,26 +1,4 @@
-# Installed dependencies
 node_modules/
-
-# Webpack build output
 dist/
-
-# Environment variables and secrets
-.env
-.env.*
-
-# Allow example environment files to be committed
-!.env.example
-
-# Test coverage
 coverage/
-
-# Cypress generated recordings
-cypress/videos/
-cypress/screenshots/
-
-# Operating system files
 .DS_Store
-Thumbs.db
-
-# Editor settings
-.vscode/

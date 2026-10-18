@@ -1,8 +1,5 @@
+import './styles.css';
+import { TaskStore } from './store';
+import { mountApp } from './ui';
 
-import "./styles.css";
-
-const appStatus = document.querySelector("#app-status");
-
-appStatus.textContent = "Mission systems online. Ready to build tasks!";
-
-console.log("Mars Mission application initialized.");
+mountApp(document.getElementById('app'), new TaskStore());
