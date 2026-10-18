@@ -471,4 +471,32 @@ describe("Mars Mission application", () => {
     cy.get('[data-testid="task-count"]').should("have.text", "0");
   });
 
+  it("TC-024: keeps the sticky header visible when scrolling down and up", () => {
+    // Create enough tasks to make the page scrollable.
+    for (let i = 1; i <= 10; i++) {
+      cy.get('[data-testid="title-input"]').clear().type(`Mission task ${i}`);
+      cy.get('[data-testid="submit-task"]').click();
+    }
+
+    cy.get('[data-testid="task-item"]').should("have.length", 10);
+
+    // Scroll down and check the header.
+    cy.scrollTo("bottom");
+
+    cy.get('[data-testid="header"]')
+      .should("be.visible")
+      .then(($header) => {
+        expect($header[0].getBoundingClientRect().top).to.be.closeTo(0, 2);
+      });
+
+    // Scroll back to the top and check again.
+    cy.scrollTo("top");
+
+    cy.get('[data-testid="header"]')
+      .should("be.visible")
+      .then(($header) => {
+        expect($header[0].getBoundingClientRect().top).to.be.closeTo(0, 2);
+      });
+  });
+
 });
