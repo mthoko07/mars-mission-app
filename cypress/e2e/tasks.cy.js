@@ -308,4 +308,28 @@ describe("Mars Mission application", () => {
     cy.get('[data-testid="task-count"]').should("have.text", "0");
   });
 
+  it("TC-015: rejects an empty title when editing a task", () => {
+    cy.get('[data-testid="title-input"]').type("Prepare launch checklist");
+    cy.get('[data-testid="desc-input"]').type("Verify all launch systems");
+    cy.get('[data-testid="assignee-input"]').type("Alex");
+    cy.get('[data-testid="submit-task"]').click();
+
+    cy.get('[data-testid="edit-task"]').click();
+
+    cy.get('[data-testid="title-input"]').clear();
+    cy.get('[data-testid="submit-task"]').click();
+
+    cy.get('[data-testid="form-error"]')
+      .should("be.visible")
+      .and("contain.text", "A task needs a title");
+
+    cy.get('[data-testid="task-item"]').should("have.length", 1).within(() => {
+      cy.get(".task__title").should("have.text", "Prepare launch checklist");
+      cy.get(".task__desc").should("contain.text", "Verify all launch systems");
+      cy.contains("Assigned to Alex").should("be.visible");
+    });
+
+    cy.get('[data-testid="task-count"]').should("have.text", "1");
+  });
+
 });
