@@ -250,4 +250,14 @@ describe("Mars Mission application", () => {
   });
 
 
+  it("TC-011: displays the current user in the side panel", () => {
+    cy.get('[data-testid="side-panel"]').should("be.visible");
+
+    cy.get('[data-testid="current-user"]')
+      .should("be.visible")
+      .and("have.value", "Mission Commander");
+
+    cy.get('[data-testid="task-count"]').should("have.text", "0");
+  });
+
 });
