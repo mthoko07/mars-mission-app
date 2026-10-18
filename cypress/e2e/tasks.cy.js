@@ -534,4 +534,25 @@ describe("Mars Mission application", () => {
     cy.get('[data-testid="task-count"]').should("have.text", "1");
   });
 
+it("TC-023: resets the task count to zero after deleting all tasks", () => {
+  cy.get('[data-testid="title-input"]').type("Prepare the rover");
+  cy.get('[data-testid="submit-task"]').click();
+
+  cy.get('[data-testid="title-input"]').clear().type("Check oxygen supplies");
+  cy.get('[data-testid="submit-task"]').click();
+
+  cy.get('[data-testid="title-input"]').clear().type("Inspect navigation");
+  cy.get('[data-testid="submit-task"]').click();
+
+  cy.get('[data-testid="task-item"]').should("have.length", 3);
+  cy.get('[data-testid="task-count"]').should("have.text", "3");
+
+  cy.on("window:confirm", () => true);
+  cy.get('[data-testid="delete-all"]').click();
+
+  cy.get('[data-testid="task-item"]').should("not.exist");
+  cy.get('[data-testid="task-count"]').should("have.text", "0");
+  cy.get('[data-testid="empty-state"]').should("be.visible");
+});
+
 });
