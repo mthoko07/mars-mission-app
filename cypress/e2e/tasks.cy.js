@@ -236,28 +236,31 @@ describe("Mars Mission application", () => {
 
   
   // Uses the real Unsplash image, so this test needs an internet connection.
-      it("TC-010: displays the Mars image when loading succeeds", () => {
-       // A 1x1 PNG stands in for the Unsplash image, so this test does not need the internet.
-       const png =
-         "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR4nGM46ML3HwAE8AITH90MAAAAAABJRU5ErkJggg==";
-       cy.intercept("GET", "**/photos/4IrVnSpwk48/download*", {
-         statusCode: 200,
-         headers: { "content-type": "image/png" },
-         body: Cypress.Buffer.from(png, "base64"),
-       });
-       cy.reload();
+     it("TC-010: displays the Mars image when loading succeeds", () => {
+    // A small SVG stands in for the Unsplash image, so this test does not need the internet.
+    const marsSvg =
+      '<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40">' +
+      '<circle cx="20" cy="20" r="18" fill="#c1440e"/></svg>';
+    cy.intercept("GET", /4IrVnSpwk48\/download/, {
+      statusCode: 200,
+      headers: { "content-type": "image/svg+xml" },
+      body: marsSvg,
+    }).as("marsImage");
+    cy.reload();
 
-       cy.get('[data-testid="hero"]').should("be.visible");
+    cy.wait("@marsImage");
 
-       cy.get('[data-testid="hero"] img.hero__img', { timeout: 15000 })
-         .should("be.visible")
-         .and("have.attr", "alt", "A red planet against a black background")
-         .and(($img) => {
-           expect($img[0].naturalWidth).to.be.greaterThan(0);
-         });
+    cy.get('[data-testid="hero"]').should("be.visible");
 
-       cy.get('[data-testid="hero"]').should("have.class", "hero--loaded");
-     });
+    cy.get('[data-testid="hero"] img.hero__img', { timeout: 15000 })
+      .should("be.visible")
+      .and("have.attr", "alt", "A red planet against a black background")
+      .and(($img) => {
+        expect($img[0].naturalWidth).to.be.greaterThan(0);
+      });
+
+    cy.get('[data-testid="hero"]').should("have.class", "hero--loaded");
+  });
 
   it("TC-011: displays the current user in the side panel", () => {
     cy.get('[data-testid="side-panel"]').should("be.visible");
@@ -393,7 +396,7 @@ describe("Mars Mission application", () => {
   });
 
   it("TC-019: displays a fallback message when the Mars image fails", () => {
-    cy.intercept("GET", "**/photos/4IrVnSpwk48/download*", {
+        cy.intercept("GET", /4IrVnSpwk48\/download/, {
       forceNetworkError: true,
     });
 
