@@ -7,21 +7,21 @@ Current phase: Documentation and project setup.
 | Task | Status |
 |---|---|
 | Confirm Node.js, npm, Git, and VS Code | Complete |
-| Create docs folder | In progress |
-| Write project plan | Pending |
-| Write test plan | Pending |
-| Create project tracker | Pending |
-| Configure Git and .gitignore | Pending |
-| Configure webpack | Pending |
-| Build the user interface | Pending |
-| Implement task CRUD functionality | Pending |
-| Implement side panel and task count | Pending |
-| Implement asynchronous Mars image | Pending |
-| Configure Cypress | Pending |
-| Write and execute Cypress tests | Pending |
-| Update README and final documentation | Pending |
-| Push final code to GitHub | Pending |
-| Prepare assessment submission | Pending |
+| Create docs folder | Complete |
+| Write project plan | Complete |
+| Write test plan | Complete |
+| Create project tracker | Complete |
+| Configure Git and .gitignore | Complete |
+| Configure webpack | Complete |
+| Build the user interface | Complete |
+| Implement task CRUD functionality | Complete |
+| Implement side panel and task count | Complete |
+| Implement asynchronous Mars image | Complete |
+| Configure Cypress | Complete |
+| Write and execute Cypress tests | Complete |
+| Update README and final documentation | Complete |
+| Push final code to GitHub | Complete |
+| Prepare assessment submission | Complete |
 
 ## Development Log
 
