@@ -279,4 +279,19 @@ describe("Mars Mission application", () => {
     cy.get('[data-testid="task-count"]').should("have.text", "0");
   });
 
+  it("TC-013: assigns Unassigned when no assignee is provided", () => {
+    cy.get('[data-testid="title-input"]').type("Calibrate navigation system");
+    cy.get('[data-testid="desc-input"]').type("Verify navigation before launch");
+
+    cy.get('[data-testid="assignee-input"]').should("have.value", "");
+    cy.get('[data-testid="submit-task"]').click();
+
+    cy.get('[data-testid="task-item"]').should("have.length", 1).within(() => {
+      cy.get(".task__title").should("have.text", "Calibrate navigation system");
+      cy.contains("Assigned to Unassigned").should("be.visible");
+    });
+
+    cy.get('[data-testid="task-count"]').should("have.text", "1");
+  });
+
 });
