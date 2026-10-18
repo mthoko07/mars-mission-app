@@ -193,4 +193,46 @@ describe("Mars Mission application", () => {
     cy.get('[data-testid="task-count"]').should("have.text", "1");
   });
 
+  
+  it("TC-008: deletes all tasks successfully", () => {
+    cy.get('[data-testid="title-input"]').type("Prepare the rover");
+    cy.get('[data-testid="submit-task"]').click();
+
+    cy.get('[data-testid="title-input"]').clear().type("Check oxygen supplies");
+    cy.get('[data-testid="submit-task"]').click();
+
+    cy.get('[data-testid="task-item"]').should("have.length", 2);
+    cy.get('[data-testid="task-count"]').should("have.text", "2");
+
+    cy.on("window:confirm", () => true);
+    cy.get('[data-testid="delete-all"]').click();
+
+    cy.get('[data-testid="task-item"]').should("not.exist");
+    cy.get('[data-testid="task-count"]').should("have.text", "0");
+  });
+
+  it("TC-009: keeps the header visible while scrolling", () => {
+    // Create enough tasks to make the page scrollable.
+    for (let i = 1; i <= 10; i++) {
+      cy.get('[data-testid="title-input"]').clear().type(`Mission task ${i}`);
+      cy.get('[data-testid="submit-task"]').click();
+    }
+
+    cy.get('[data-testid="task-item"]').should("have.length", 10);
+
+    // Scroll down the page.
+    cy.scrollTo("bottom");
+
+    // Confirm the sticky header remains visible.
+    cy.get('[data-testid="header"]')
+      .should("be.visible")
+      .and("contain", "Houston, We Have a To-Do List");
+
+    // Confirm the header is still positioned at the top.
+    cy.get('[data-testid="header"]').then(($header) => {
+      expect($header[0].getBoundingClientRect().top).to.be.closeTo(0, 2);
+    });
+  });
+
+
 });
