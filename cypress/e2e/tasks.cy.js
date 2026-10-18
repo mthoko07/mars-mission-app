@@ -383,4 +383,18 @@ describe("Mars Mission application", () => {
       .and("have.value", "Alex Morgan");
   });
 
+  it("TC-019: displays a fallback message when the Mars image fails", () => {
+    cy.intercept("GET", "**/photos/4IrVnSpwk48/download*", {
+      forceNetworkError: true,
+    });
+
+    cy.reload();
+
+    cy.get('[data-testid="hero"]', { timeout: 10000 })
+      .should("have.class", "hero--failed")
+      .and("contain.text", "Mars is out of signal range right now.");
+
+    cy.get('[data-testid="hero"] img.hero__img').should("not.exist");
+  });
+
 });
