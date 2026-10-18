@@ -397,4 +397,33 @@ describe("Mars Mission application", () => {
     cy.get('[data-testid="hero"] img.hero__img').should("not.exist");
   });
 
+  it("TC-020: deletes only the selected task when several tasks exist", () => {
+    const tasks = [
+      "Prepare the rover",
+      "Check oxygen supplies",
+      "Inspect navigation systems",
+    ];
+
+    tasks.forEach((task) => {
+      cy.get('[data-testid="title-input"]').clear().type(task);
+      cy.get('[data-testid="submit-task"]').click();
+    });
+
+    cy.get('[data-testid="task-item"]').should("have.length", 3);
+    cy.get('[data-testid="task-count"]').should("have.text", "3");
+
+    cy.get('[data-testid="task-item"]')
+      .contains(".task__title", "Check oxygen supplies")
+      .parents('[data-testid="task-item"]')
+      .find('[data-testid="delete-task"]')
+      .click();
+
+    cy.get('[data-testid="task-item"]').should("have.length", 2);
+    cy.get('[data-testid="task-count"]').should("have.text", "2");
+
+    cy.contains(".task__title", "Prepare the rover").should("be.visible");
+    cy.contains(".task__title", "Inspect navigation systems").should("be.visible");
+    cy.contains(".task__title", "Check oxygen supplies").should("not.exist");
+  });
+
 });
