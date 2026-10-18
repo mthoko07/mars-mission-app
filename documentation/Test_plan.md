@@ -28,6 +28,7 @@ Testing covers task management, input validation, task counts, task persistence,
 - Persistence: browser localStorage
 
 ## 5. Initial Test Scenarios
+## Initial Test Scenarios
 
 | ID | Test scenario | Expected result |
 |---|---|---|
@@ -43,21 +44,19 @@ Testing covers task management, input validation, task counts, task persistence,
 | TC-010 | Load the Mars image | Image displays when loading succeeds |
 | TC-011 | Check the current-user panel | Current user is displayed |
 | TC-012 | Reload after deleting all tasks | Deleted tasks do not return |
-ID	Test scenario	Expected result
-TC-013	Create a task without an assignee	Task is created with the default assignee Unassigned
-TC-014	Create a task with whitespace-only title	Validation prevents task creation
-TC-015	Edit a task and clear its title	Validation prevents the update and preserves the original task
-TC-016	Cancel deleting all tasks	Existing tasks remain unchanged
-TC-017	Change the current user	Side panel displays the updated user
-TC-018	Refresh after changing the current user	Updated user remains selected
-TC-019	Load the Mars image unsuccessfully	A fallback message is displayed
-TC-020	Delete a task when several tasks exist	Only the selected task is deleted
-TC-021	Create multiple tasks	Each task displays the correct title, description, creator and assignee
-TC-022	Open the application with no tasks	Empty-state message is displayed
-TC-023	Verify the task count after deleting all tasks	Task count displays zero
-TC-024	Check the header's position while scrolling	Header remains sticky at the top
-TC-025	Cancel editing a task	Original task details remain unchanged
-
+| TC-013 | Create a task without an assignee | Task is created with the default assignee, `Unassigned` |
+| TC-014 | Create a task with a whitespace-only title | Validation prevents task creation |
+| TC-015 | Edit a task and clear its title | Validation prevents the update and preserves the original task |
+| TC-016 | Cancel deleting all tasks | Existing tasks remain unchanged |
+| TC-017 | Change the current user | Side panel displays the updated user |
+| TC-018 | Refresh after changing the current user | Updated user remains selected |
+| TC-019 | Load the Mars image unsuccessfully | A fallback message is displayed |
+| TC-020 | Delete a task when several tasks exist | Only the selected task is deleted |
+| TC-021 | Create multiple tasks | Each task displays the correct title, description, creator and assignee |
+| TC-022 | Open the application with no tasks | Empty-state message is displayed |
+| TC-023 | Verify the task count after deleting all tasks | Task count displays zero |
+| TC-024 | Check the header's position while scrolling | Header remains sticky at the top |
+| TC-025 | Cancel editing a task | Original task details remain unchanged |
 ## 6. Test Data
 
 Use sample tasks with different titles, descriptions, creator names, and assignee names. Include missing fields, whitespace-only values, duplicate titles, and multiple tasks to evaluate validation and task-count behaviour.
