@@ -235,7 +235,19 @@ describe("Mars Mission application", () => {
   });
 
   
-  it("TC-010: displays the Mars image when loading succeeds", () => {
+  // Uses the real Unsplash image, so this test needs an internet connection.
+  // TC-019 covers the failure case without a network.
+    it("TC-010: displays the Mars image when loading succeeds", () => {
+    // A 1x1 PNG stands in for the Unsplash image, so this test does not need the internet.
+    const png =
+      "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR4nGM46ML3HwAE8AITH90MAAAAAABJRU5ErkJggg==";
+    cy.intercept("GET", "**/photos/4IrVnSpwk48/download*", {
+      statusCode: 200,
+      headers: { "content-type": "image/png" },
+      body: Cypress.Buffer.from(png, "base64"),
+    });
+    cy.reload();
+
     cy.get('[data-testid="hero"]').should("be.visible");
 
     cy.get('[data-testid="hero"] img.hero__img', { timeout: 15000 })
@@ -245,11 +257,9 @@ describe("Mars Mission application", () => {
         expect($img[0].naturalWidth).to.be.greaterThan(0);
       });
 
-    cy.get('[data-testid="hero"]')
-      .should("have.class", "hero--loaded");
+    cy.get('[data-testid="hero"]').should("have.class", "hero--loaded");
   });
-
-
+  
   it("TC-011: displays the current user in the side panel", () => {
     cy.get('[data-testid="side-panel"]').should("be.visible");
 
@@ -471,6 +481,27 @@ describe("Mars Mission application", () => {
     cy.get('[data-testid="task-count"]').should("have.text", "0");
   });
 
+  it("TC-023: resets the task count to zero after deleting all tasks", () => {
+    cy.get('[data-testid="title-input"]').type("Prepare the rover");
+    cy.get('[data-testid="submit-task"]').click();
+
+    cy.get('[data-testid="title-input"]').clear().type("Check oxygen supplies");
+    cy.get('[data-testid="submit-task"]').click();
+
+    cy.get('[data-testid="title-input"]').clear().type("Inspect navigation");
+    cy.get('[data-testid="submit-task"]').click();
+
+    cy.get('[data-testid="task-item"]').should("have.length", 3);
+    cy.get('[data-testid="task-count"]').should("have.text", "3");
+
+    cy.on("window:confirm", () => true);
+    cy.get('[data-testid="delete-all"]').click();
+
+    cy.get('[data-testid="task-item"]').should("not.exist");
+    cy.get('[data-testid="task-count"]').should("have.text", "0");
+    cy.get('[data-testid="empty-state"]').should("be.visible");
+  });
+
   it("TC-024: keeps the sticky header visible when scrolling down and up", () => {
     // Create enough tasks to make the page scrollable.
     for (let i = 1; i <= 10; i++) {
@@ -534,25 +565,5 @@ describe("Mars Mission application", () => {
     cy.get('[data-testid="task-count"]').should("have.text", "1");
   });
 
-it("TC-023: resets the task count to zero after deleting all tasks", () => {
-  cy.get('[data-testid="title-input"]').type("Prepare the rover");
-  cy.get('[data-testid="submit-task"]').click();
-
-  cy.get('[data-testid="title-input"]').clear().type("Check oxygen supplies");
-  cy.get('[data-testid="submit-task"]').click();
-
-  cy.get('[data-testid="title-input"]').clear().type("Inspect navigation");
-  cy.get('[data-testid="submit-task"]').click();
-
-  cy.get('[data-testid="task-item"]').should("have.length", 3);
-  cy.get('[data-testid="task-count"]').should("have.text", "3");
-
-  cy.on("window:confirm", () => true);
-  cy.get('[data-testid="delete-all"]').click();
-
-  cy.get('[data-testid="task-item"]').should("not.exist");
-  cy.get('[data-testid="task-count"]').should("have.text", "0");
-  cy.get('[data-testid="empty-state"]').should("be.visible");
-});
 
 });
