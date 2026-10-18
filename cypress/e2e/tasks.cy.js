@@ -63,4 +63,54 @@ describe("Mars Mission application", () => {
     cy.get('[data-testid="task-item"]').should("not.exist");
     cy.get('[data-testid="task-count"]').should("have.text", "0");
   });
+
+  
+  it("TC-004: updates an existing task", () => {
+    cy.get('[data-testid="title-input"]')
+      .type("Prepare Mars equipment");
+
+    cy.get('[data-testid="desc-input"]')
+      .type("Check oxygen supplies");
+
+    cy.get('[data-testid="assignee-input"]')
+      .type("Alex");
+
+    cy.get('[data-testid="submit-task"]').click();
+
+    cy.get('[data-testid="task-item"]')
+      .should("have.length", 1);
+
+    cy.get('[data-testid="edit-task"]').click();
+
+    cy.get('[data-testid="title-input"]')
+      .should("have.value", "Prepare Mars equipment")
+      .clear()
+      .type("Inspect Mars rover");
+
+    cy.get('[data-testid="desc-input"]')
+      .clear()
+      .type("Inspect wheels and navigation systems");
+
+    cy.get('[data-testid="assignee-input"]')
+      .clear()
+      .type("Sam");
+
+    cy.get('[data-testid="submit-task"]').click();
+
+    cy.get('[data-testid="task-item"]')
+      .should("have.length", 1)
+      .first()
+      .within(() => {
+        cy.get(".task__title")
+          .should("have.text", "Inspect Mars rover");
+
+        cy.get(".task__desc")
+          .should("contain.text", "Inspect wheels and navigation systems");
+
+        cy.contains("Assigned to Sam").should("be.visible");
+      });
+
+    cy.get('[data-testid="task-count"]').should("have.text", "1");
+  });
+
 });
