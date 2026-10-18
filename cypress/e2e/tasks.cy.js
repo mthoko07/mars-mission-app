@@ -462,4 +462,13 @@ describe("Mars Mission application", () => {
     cy.get('[data-testid="task-count"]').should("have.text", "2");
   });
 
+  it("TC-022: displays the empty state when no tasks exist", () => {
+    cy.get('[data-testid="task-item"]').should("not.exist");
+
+    cy.get('[data-testid="empty-state"]')
+      .should("be.visible");
+
+    cy.get('[data-testid="task-count"]').should("have.text", "0");
+  });
+
 });
