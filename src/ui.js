@@ -38,7 +38,7 @@ export function mountApp(root, store, { imageLoader } = {}) {
     class: 'input',
     value: store.currentUser,
     'data-testid': 'current-user',
-    onchange: (e) => store.setCurrentUser(e.target.value),
+    oninput: (e) => store.setCurrentUser(e.target.value),
   });
   const countValue = el('strong', { class: 'panel__count', 'data-testid': 'task-count', text: '0' });
   const deleteAllBtn = el('button', {
