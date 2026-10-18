@@ -294,4 +294,18 @@ describe("Mars Mission application", () => {
     cy.get('[data-testid="task-count"]').should("have.text", "1");
   });
 
+  it("TC-014: rejects a title containing only whitespace", () => {
+    cy.get('[data-testid="title-input"]').type("   ");
+    cy.get('[data-testid="desc-input"]').type("Check the rover systems");
+
+    cy.get('[data-testid="submit-task"]').click();
+
+    cy.get('[data-testid="form-error"]')
+      .should("be.visible")
+      .and("contain.text", "A task needs a title");
+
+    cy.get('[data-testid="task-item"]').should("not.exist");
+    cy.get('[data-testid="task-count"]').should("have.text", "0");
+  });
+
 });
