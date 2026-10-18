@@ -426,4 +426,40 @@ describe("Mars Mission application", () => {
     cy.contains(".task__title", "Check oxygen supplies").should("not.exist");
   });
 
+  it("TC-021: displays correct details for multiple tasks", () => {
+    // Create the first task as Alex.
+    cy.get('[data-testid="current-user"]').clear().type("Alex");
+    cy.get('[data-testid="title-input"]').type("Prepare the rover");
+    cy.get('[data-testid="desc-input"]').type("Inspect wheels and navigation");
+    cy.get('[data-testid="assignee-input"]').type("Jordan");
+    cy.get('[data-testid="submit-task"]').click();
+
+    // Change the creator and create a second task.
+    cy.get('[data-testid="current-user"]').clear().type("Sam");
+    cy.get('[data-testid="title-input"]').type("Check oxygen supplies");
+    cy.get('[data-testid="desc-input"]').type("Verify oxygen tanks");
+    cy.get('[data-testid="assignee-input"]').type("Taylor");
+    cy.get('[data-testid="submit-task"]').click();
+
+    cy.get('[data-testid="task-item"]').should("have.length", 2);
+
+    // Verify the first task's details.
+    cy.get('[data-testid="task-item"]').eq(0).within(() => {
+      cy.get(".task__title").should("have.text", "Prepare the rover");
+      cy.get(".task__desc").should("contain.text", "Inspect wheels and navigation");
+      cy.contains("Created by Alex").should("be.visible");
+      cy.contains("Assigned to Jordan").should("be.visible");
+    });
+
+    // Verify the second task's details.
+    cy.get('[data-testid="task-item"]').eq(1).within(() => {
+      cy.get(".task__title").should("have.text", "Check oxygen supplies");
+      cy.get(".task__desc").should("contain.text", "Verify oxygen tanks");
+      cy.contains("Created by Sam").should("be.visible");
+      cy.contains("Assigned to Taylor").should("be.visible");
+    });
+
+    cy.get('[data-testid="task-count"]').should("have.text", "2");
+  });
+
 });
