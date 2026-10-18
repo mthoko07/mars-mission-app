@@ -234,5 +234,20 @@ describe("Mars Mission application", () => {
     });
   });
 
+  
+  it("TC-010: displays the Mars image when loading succeeds", () => {
+    cy.get('[data-testid="hero"]').should("be.visible");
+
+    cy.get('[data-testid="hero"] img.hero__img', { timeout: 15000 })
+      .should("be.visible")
+      .and("have.attr", "alt", "A red planet against a black background")
+      .and(($img) => {
+        expect($img[0].naturalWidth).to.be.greaterThan(0);
+      });
+
+    cy.get('[data-testid="hero"]')
+      .should("have.class", "hero--loaded");
+  });
+
 
 });
