@@ -236,30 +236,29 @@ describe("Mars Mission application", () => {
 
   
   // Uses the real Unsplash image, so this test needs an internet connection.
-  // TC-019 covers the failure case without a network.
-    it("TC-010: displays the Mars image when loading succeeds", () => {
-    // A 1x1 PNG stands in for the Unsplash image, so this test does not need the internet.
-    const png =
-      "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR4nGM46ML3HwAE8AITH90MAAAAAABJRU5ErkJggg==";
-    cy.intercept("GET", "**/photos/4IrVnSpwk48/download*", {
-      statusCode: 200,
-      headers: { "content-type": "image/png" },
-      body: Cypress.Buffer.from(png, "base64"),
-    });
-    cy.reload();
+      it("TC-010: displays the Mars image when loading succeeds", () => {
+       // A 1x1 PNG stands in for the Unsplash image, so this test does not need the internet.
+       const png =
+         "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR4nGM46ML3HwAE8AITH90MAAAAAABJRU5ErkJggg==";
+       cy.intercept("GET", "**/photos/4IrVnSpwk48/download*", {
+         statusCode: 200,
+         headers: { "content-type": "image/png" },
+         body: Cypress.Buffer.from(png, "base64"),
+       });
+       cy.reload();
 
-    cy.get('[data-testid="hero"]').should("be.visible");
+       cy.get('[data-testid="hero"]').should("be.visible");
 
-    cy.get('[data-testid="hero"] img.hero__img', { timeout: 15000 })
-      .should("be.visible")
-      .and("have.attr", "alt", "A red planet against a black background")
-      .and(($img) => {
-        expect($img[0].naturalWidth).to.be.greaterThan(0);
-      });
+       cy.get('[data-testid="hero"] img.hero__img', { timeout: 15000 })
+         .should("be.visible")
+         .and("have.attr", "alt", "A red planet against a black background")
+         .and(($img) => {
+           expect($img[0].naturalWidth).to.be.greaterThan(0);
+         });
 
-    cy.get('[data-testid="hero"]').should("have.class", "hero--loaded");
-  });
-  
+       cy.get('[data-testid="hero"]').should("have.class", "hero--loaded");
+     });
+
   it("TC-011: displays the current user in the side panel", () => {
     cy.get('[data-testid="side-panel"]').should("be.visible");
 
