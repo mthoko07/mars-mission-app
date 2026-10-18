@@ -332,4 +332,43 @@ describe("Mars Mission application", () => {
     cy.get('[data-testid="task-count"]').should("have.text", "1");
   });
 
+  it("TC-016: keeps tasks when delete-all is cancelled", () => {
+    cy.get('[data-testid="title-input"]').type("Prepare the rover");
+    cy.get('[data-testid="submit-task"]').click();
+
+    cy.get('[data-testid="title-input"]').clear().type("Check oxygen supplies");
+    cy.get('[data-testid="submit-task"]').click();
+
+    cy.get('[data-testid="task-item"]').should("have.length", 2);
+    cy.get('[data-testid="task-count"]').should("have.text", "2");
+
+    cy.on("window:confirm", () => false);
+    cy.get('[data-testid="delete-all"]').click();
+
+    cy.get('[data-testid="task-item"]').should("have.length", 2);
+    cy.get('[data-testid="task-count"]').should("have.text", "2");
+
+    cy.contains(".task__title", "Prepare the rover").should("be.visible");
+    cy.contains(".task__title", "Check oxygen supplies").should("be.visible");
+  });
+
+  it("TC-017: updates the side panel when the current user changes", () => {
+    cy.get('[data-testid="current-user"]')
+      .should("have.value", "Mission Commander");
+
+    cy.get('[data-testid="current-user"]')
+      .clear()
+      .type("Alex Morgan");
+
+    cy.get('[data-testid="current-user"]')
+      .should("have.value", "Alex Morgan");
+
+    cy.get('[data-testid="title-input"]').type("Inspect the rover");
+    cy.get('[data-testid="submit-task"]').click();
+
+    cy.get('[data-testid="task-item"]').within(() => {
+      cy.contains("Created by Alex Morgan").should("be.visible");
+    });
+  });
+
 });
