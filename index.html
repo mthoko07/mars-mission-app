@@ -1,0 +1,33 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Mars Mission task management application" />
+  <title>Mars Mission Control</title>
+</head>
+<body>
+  <div id="app">
+    <header class="mission-header">
+      <h1>🚀 Mars Mission Control</h1>
+      <p>Houston, we have tasks!</p>
+    </header>
+
+    <main class="page-layout">
+      <aside class="sidebar">
+        <h2>Mission Crew</h2>
+        <p>Current user: <strong id="current-user">Commander Alex</strong></p>
+        <p>Tasks: <strong id="task-count">0</strong></p>
+        <button id="delete-all-btn" type="button">Delete all tasks</button>
+      </aside>
+
+      <section class="main-content">
+        <h2>Mission Tasks</h2>
+        <p id="app-status" role="status">Mission systems ready.</p>
+        <div id="task-list"></div>
+      </section>
+    </main>
+  </div>
+</body>
+</html>
