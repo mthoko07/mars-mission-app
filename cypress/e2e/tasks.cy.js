@@ -260,4 +260,23 @@ describe("Mars Mission application", () => {
     cy.get('[data-testid="task-count"]').should("have.text", "0");
   });
 
+  it("TC-012: keeps deleted tasks removed after reloading", () => {
+    cy.get('[data-testid="title-input"]').type("Prepare the launch checklist");
+    cy.get('[data-testid="submit-task"]').click();
+
+    cy.get('[data-testid="task-item"]').should("have.length", 1);
+    cy.get('[data-testid="task-count"]').should("have.text", "1");
+
+    cy.on("window:confirm", () => true);
+    cy.get('[data-testid="delete-all"]').click();
+
+    cy.get('[data-testid="task-item"]').should("not.exist");
+    cy.get('[data-testid="task-count"]').should("have.text", "0");
+
+    cy.reload();
+
+    cy.get('[data-testid="task-item"]').should("not.exist");
+    cy.get('[data-testid="task-count"]').should("have.text", "0");
+  });
+
 });
