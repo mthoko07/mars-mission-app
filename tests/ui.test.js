@@ -111,7 +111,7 @@ describe('Mars mission app', () => {
   test('changing the current user applies to new tasks', () => {
     const input = q('current-user');
     input.value = 'Bishop';
-    input.dispatchEvent(new Event('change'));
+    input.dispatchEvent(new Event('input', { bubbles: true })); 
     addTask({ title: 'Reboot' });
     expect(q('task-item').textContent).toContain('Created by Bishop');
   });
