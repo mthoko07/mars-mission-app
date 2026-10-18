@@ -371,4 +371,16 @@ describe("Mars Mission application", () => {
     });
   });
 
+  it("TC-018: persists the current user after refreshing", () => {
+    cy.get('[data-testid="current-user"]')
+      .clear()
+      .type("Alex Morgan");
+
+    cy.reload();
+
+    cy.get('[data-testid="current-user"]')
+      .should("be.visible")
+      .and("have.value", "Alex Morgan");
+  });
+
 });
