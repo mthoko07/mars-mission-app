@@ -113,4 +113,38 @@ describe("Mars Mission application", () => {
     cy.get('[data-testid="task-count"]').should("have.text", "1");
   });
 
+  
+  it("TC-005: deletes one task without deleting other tasks", () => {
+    // Create the first task
+    cy.get('[data-testid="title-input"]')
+      .type("Check oxygen supplies");
+    cy.get('[data-testid="submit-task"]').click();
+
+    // Create the second task
+    cy.get('[data-testid="title-input"]')
+      .clear()
+      .type("Inspect the rover");
+    cy.get('[data-testid="submit-task"]').click();
+
+    // Confirm both tasks exist
+    cy.get('[data-testid="task-item"]').should("have.length", 2);
+
+    // Delete the first task
+    cy.get('[data-testid="task-item"]')
+      .contains(".task__title", "Check oxygen supplies")
+      .parents('[data-testid="task-item"]')
+      .find('[data-testid="delete-task"]')
+      .click();
+
+    // Confirm only the second task remains
+    cy.get('[data-testid="task-item"]')
+      .should("have.length", 1)
+      .within(() => {
+        cy.get(".task__title")
+          .should("have.text", "Inspect the rover");
+      });
+
+    cy.get('[data-testid="task-count"]').should("have.text", "1");
+  });
+
 });
