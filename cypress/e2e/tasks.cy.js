@@ -499,4 +499,39 @@ describe("Mars Mission application", () => {
       });
   });
 
+  it("TC-025: preserves original task details when editing is cancelled", () => {
+    // Create a task with its original details.
+    cy.get('[data-testid="title-input"]').type("Prepare the Mars rover");
+    cy.get('[data-testid="desc-input"]').type("Inspect wheels before launch");
+    cy.get('[data-testid="assignee-input"]').type("Alex");
+    cy.get('[data-testid="submit-task"]').click();
+
+    // Open edit mode and change the fields.
+    cy.get('[data-testid="edit-task"]').click();
+
+    cy.get('[data-testid="title-input"]')
+      .clear()
+      .type("Updated rover task");
+
+    cy.get('[data-testid="desc-input"]')
+      .clear()
+      .type("Updated inspection details");
+
+    cy.get('[data-testid="assignee-input"]')
+      .clear()
+      .type("Jordan");
+
+    // Cancel instead of saving the changes.
+    cy.get('[data-testid="cancel-edit"]').click();
+
+    // Verify that the original details are unchanged.
+    cy.get('[data-testid="task-item"]').should("have.length", 1).within(() => {
+      cy.get(".task__title").should("have.text", "Prepare the Mars rover");
+      cy.get(".task__desc").should("contain.text", "Inspect wheels before launch");
+      cy.contains("Assigned to Alex").should("be.visible");
+    });
+
+    cy.get('[data-testid="task-count"]').should("have.text", "1");
+  });
+
 });
