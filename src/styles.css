@@ -103,7 +103,7 @@ body {
 .task__meta { margin: 0 0 10px; display: flex; flex-wrap: wrap; gap: 16px; font-size: 0.85rem; color: var(--muted); }
 .task__actions { display: flex; gap: 8px; }
 .tasks__empty { color: var(--muted); text-align: center; padding: 24px 0; }
-
+.task--done .task__title { text-decoration: line-through; opacity: 0.6; }
 @media (max-width: 760px) {
   .layout { grid-template-columns: 1fr; }
   .panel { position: static; }

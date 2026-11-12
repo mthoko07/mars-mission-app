@@ -566,6 +566,50 @@ describe("Mars Mission application", () => {
 
     cy.get('[data-testid="task-count"]').should("have.text", "1");
   });
+  
+it("TC-026: marks a task as done and keeps it done after a reload", () => {
+  cy.get('[data-testid="title-input"]').type("Check the oxygen tanks");
+  cy.get('[data-testid="submit-task"]').click();
 
+  cy.get('[data-testid="toggle-done"]').click();
+
+  cy.get('[data-testid="task-item"]')
+    .should("have.class", "task--done")
+    .find('[data-testid="toggle-done"]')
+    .should("have.text", "Reopen");
+
+  cy.reload();
+
+  cy.get('[data-testid="task-item"]').should("have.class", "task--done");
+});
+
+  it.only("TC-027: saves a task priority and keeps it after a reload", () => {
+    cy.get('[data-testid="title-input"]').type("Seal the airlock");
+    cy.get('[data-testid="priority-input"]').select("High");
+    cy.get('[data-testid="submit-task"]').click();
+
+    cy.get('[data-testid="task-item"]')
+      .should("have.length", 1)
+      .and("contain.text", "Priority: High");
+
+    cy.reload();
+
+    cy.get('[data-testid="task-item"]')
+      .should("have.length", 1)
+      .and("contain.text", "Priority: High");
+  });
+
+  it.only("TC-028: uses Medium priority when none is chosen, and can edit it", () => {
+    cy.get('[data-testid="title-input"]').type("Check the radio");
+    cy.get('[data-testid="submit-task"]').click();
+
+    cy.get('[data-testid="task-item"]').should("contain.text", "Priority: Medium");
+
+    cy.get('[data-testid="edit-task"]').click();
+    cy.get('[data-testid="priority-input"]').should("have.value", "Medium").select("Low");
+    cy.get('[data-testid="submit-task"]').click();
+
+    cy.get('[data-testid="task-item"]').should("contain.text", "Priority: Low");
+  });
 
 });
