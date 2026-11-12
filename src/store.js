@@ -1,6 +1,15 @@
 const TASKS_KEY = 'mars.tasks';
 const USER_KEY = 'mars.currentUser';
 export const DEFAULT_USER = 'Mission Commander';
+export const PRIORITIES = ['Low', 'Medium', 'High'];
+export const DEFAULT_PRIORITY = 'Medium';
+
+function checkPriority(priority) {
+  if (!PRIORITIES.includes(priority)) {
+    throw new Error(`Priority must be one of: ${PRIORITIES.join(', ')}`);
+  }
+  return priority;
+}
 
 function safeStorage() {
   try {
@@ -59,15 +68,18 @@ export class TaskStore {
     return this.tasks.length;
   }
 
-  create({ title, description = '', assignee = '' }) {
+  create({ title, description = '', assignee = '', priority = DEFAULT_PRIORITY  }) {
     const cleanTitle = (title || '').trim();
     if (!cleanTitle) throw new Error('A task needs a title');
+    checkPriority(priority);
     const task = {
       id: makeId(),
       title: cleanTitle,
       description: description.trim(),
       createdBy: this.currentUser,
       assignedTo: assignee.trim() || 'Unassigned',
+      priority,
+      done: false,
       createdAt: Date.now(),
     };
     this.tasks.push(task);
@@ -85,6 +97,15 @@ export class TaskStore {
     }
     if (changes.description !== undefined) task.description = changes.description.trim();
     if (changes.assignee !== undefined) task.assignedTo = changes.assignee.trim() || 'Unassigned';
+    if (changes.priority !== undefined) task.priority = checkPriority(changes.priority);
+    this._commit();
+    return { ...task };
+  }
+
+    toggleDone(id) {
+    const task = this.tasks.find((t) => t.id === id);
+    if (!task) throw new Error(`No task with id ${id}`);
+    task.done = !task.done;
     this._commit();
     return { ...task };
   }

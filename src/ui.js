@@ -1,4 +1,5 @@
 import { renderMarsImage } from './image';
+import { PRIORITIES, DEFAULT_PRIORITY } from './store';
 
 const el = (tag, props = {}, ...children) => {
   const node = document.createElement(tag);
@@ -65,6 +66,12 @@ export function mountApp(root, store, { imageLoader } = {}) {
   const titleInput = el('input', { id: 'task-title', class: 'input', required: 'required', placeholder: 'e.g. Pack more oxygen', 'data-testid': 'title-input' });
   const descInput = el('textarea', { id: 'task-desc', class: 'input', rows: '3', placeholder: 'What needs doing?', 'data-testid': 'desc-input' });
   const assigneeInput = el('input', { id: 'task-assignee', class: 'input', placeholder: 'Who is on it?', 'data-testid': 'assignee-input' });
+    const priorityInput = el(
+    'select',
+    { id: 'task-priority', class: 'input', 'data-testid': 'priority-input' },
+    PRIORITIES.map((p) => el('option', { value: p, text: p }))
+  );
+  priorityInput.value = DEFAULT_PRIORITY;
   const formError = el('p', { class: 'form__error', role: 'alert', 'data-testid': 'form-error' });
   const submitBtn = el('button', { class: 'btn btn--primary', type: 'submit', 'data-testid': 'submit-task', text: 'Add task' });
   const cancelBtn = el('button', { class: 'btn', type: 'button', 'data-testid': 'cancel-edit', text: 'Cancel', hidden: 'hidden', onclick: () => resetForm() });
@@ -78,6 +85,8 @@ export function mountApp(root, store, { imageLoader } = {}) {
     descInput,
     el('label', { for: 'task-assignee', class: 'label', text: 'Assigned to' }),
     assigneeInput,
+        el('label', { for: 'task-priority', class: 'label', text: 'Priority' }),
+    priorityInput,
     formError,
     el('div', { class: 'form__actions' }, submitBtn, cancelBtn)
   );
@@ -85,6 +94,7 @@ export function mountApp(root, store, { imageLoader } = {}) {
   function resetForm() {
     editingId = null;
     form.reset();
+    priorityInput.value = DEFAULT_PRIORITY;
     formError.textContent = '';
     submitBtn.textContent = 'Add task';
     form.querySelector('.form__heading').textContent = 'New mission task';
@@ -94,7 +104,7 @@ export function mountApp(root, store, { imageLoader } = {}) {
   form.addEventListener('submit', (e) => {
     e.preventDefault();
     try {
-      const data = { title: titleInput.value, description: descInput.value, assignee: assigneeInput.value };
+      const data = { title: titleInput.value, description: descInput.value, assignee: assigneeInput.value, priority: priorityInput.value };
       if (editingId) store.update(editingId, data);
       else store.create(data);
       resetForm();
@@ -108,6 +118,7 @@ export function mountApp(root, store, { imageLoader } = {}) {
     titleInput.value = task.title;
     descInput.value = task.description;
     assigneeInput.value = task.assignedTo === 'Unassigned' ? '' : task.assignedTo;
+    priorityInput.value = task.priority || DEFAULT_PRIORITY;
     submitBtn.textContent = 'Save changes';
     form.querySelector('.form__heading').textContent = 'Edit task';
     cancelBtn.hidden = false;
@@ -127,18 +138,27 @@ export function mountApp(root, store, { imageLoader } = {}) {
       list.appendChild(
         el(
           'li',
-          { class: 'task', 'data-testid': 'task-item', 'data-id': task.id },
+         { class: task.done ? 'task task--done' : 'task', 'data-testid': 'task-item', 'data-id': task.id },
           el('h3', { class: 'task__title', text: task.title }),
           task.description ? el('p', { class: 'task__desc', text: task.description }) : null,
           el(
             'p',
             { class: 'task__meta' },
             el('span', { text: `Created by ${task.createdBy}` }),
-            el('span', { text: `Assigned to ${task.assignedTo}` })
+            el('span', { text: `Assigned to ${task.assignedTo}` }),
+            el('span', { text: `Assigned to ${task.assignedTo}` }),
+            el('span', { class: 'task__priority', 'data-testid': 'task-priority', text: `Priority: ${task.priority || DEFAULT_PRIORITY}` })
           ),
           el(
             'div',
             { class: 'task__actions' },
+            el('button', {
+              class: 'btn',
+              type: 'button',
+              'data-testid': 'toggle-done',
+              text: task.done ? 'Reopen' : 'Mark done',
+              onclick: () => store.toggleDone(task.id),
+            }),
             el('button', { class: 'btn', type: 'button', 'data-testid': 'edit-task', text: 'Edit', onclick: () => startEdit(task) }),
             el('button', {
               class: 'btn btn--danger',

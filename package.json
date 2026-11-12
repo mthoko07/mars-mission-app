@@ -3,13 +3,16 @@
   "version": "1.0.0",
   "description": "Task tracker SPA for the Mars mission, bundled with webpack",
   "private": true,
-  "scripts": {
-    "start": "webpack serve --mode development --open",
-    "build": "webpack --mode production",
-    "test": "jest",
-    "test:e2e": "cypress run",
-    "cypress:open": "cypress open"
-  },
+  
+"scripts": {
+  "start": "webpack serve --mode development",
+  "serve": "webpack serve --mode development",
+  "build": "webpack --mode production",
+  "test": "jest",
+  "test:e2e": "start-server-and-test serve http://127.0.0.1:3000 cypress:run",
+  "cypress:run": "cypress run"
+}
+,
   "devDependencies": {
     "@babel/core": "^7.25.0",
     "@babel/preset-env": "^7.25.0",

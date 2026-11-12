@@ -1,8 +1,8 @@
+
 name: Mars Mission Tests
 
 on:
   push:
-    branches: [main]
   pull_request:
     branches: [main]
 
@@ -27,13 +27,7 @@ jobs:
         run: npm test
 
       - name: Run Cypress end-to-end tests
-        uses: cypress-io/github-action@v6
-        with:
-          start: npm start
-          wait-on: 'http://localhost:3000'
-          wait-on-timeout: 120
-          browser: electron
-          install: false
+        run: npm run test:e2e
 
       - name: Upload Cypress screenshots on failure
         if: failure()
