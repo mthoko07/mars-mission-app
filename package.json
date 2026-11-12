@@ -9,8 +9,8 @@
   "serve": "webpack serve --mode development",
   "build": "webpack --mode production",
   "test": "jest",
-  "test:e2e": "start-server-and-test start http://localhost:3000 cypress",
-  "cypress:open": "cypress open"
+  "test:e2e": "start-server-and-test serve http://127.0.0.1:3000 cypress:run",
+  "cypress:run": "cypress run"
 }
 ,
   "devDependencies": {
