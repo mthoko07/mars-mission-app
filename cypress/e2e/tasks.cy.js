@@ -583,7 +583,7 @@ it("TC-026: marks a task as done and keeps it done after a reload", () => {
   cy.get('[data-testid="task-item"]').should("have.class", "task--done");
 });
 
-  it.only("TC-027: saves a task priority and keeps it after a reload", () => {
+  it("TC-027: saves a task priority and keeps it after a reload", () => {
     cy.get('[data-testid="title-input"]').type("Seal the airlock");
     cy.get('[data-testid="priority-input"]').select("High");
     cy.get('[data-testid="submit-task"]').click();
@@ -599,7 +599,7 @@ it("TC-026: marks a task as done and keeps it done after a reload", () => {
       .and("contain.text", "Priority: High");
   });
 
-  it.only("TC-028: uses Medium priority when none is chosen, and can edit it", () => {
+  it("TC-028: uses Medium priority when none is chosen, and can edit it", () => {
     cy.get('[data-testid="title-input"]').type("Check the radio");
     cy.get('[data-testid="submit-task"]').click();
 
